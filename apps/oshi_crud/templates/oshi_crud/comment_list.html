@@ -1,0 +1,27 @@
+<!-- user_crud/user_base.htmlを継承する -->
+{% extends "oshi_crud/base.html" %} {% block title
+%}推しへのコメント一覧{%endblock %} {% block content %}
+<h2>推しへのコメント一覧</h2>
+
+<table>
+  <tr>
+    <th>推しの情報を確認・編集する場合はこちら👇</th>
+    <th>推しの名前またはXアカウント名</th>
+    <th>写真日時またはX投稿日時
+    </th>
+    <th>推しへのコメント</th>
+  </tr>
+  {% for oshi_info in oshi_informations %}
+  <tr>
+    <td>
+      <a href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.id) }}">
+        {{ oshi_info.id }}
+      </a>
+    </td>
+    <td>{{ oshi_info.oshi_name }}</td>
+    <td>{{ oshi_info.posted_at }}</td>
+    <td>{{ oshi_info.comment }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

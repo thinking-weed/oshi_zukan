@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登録フォーム</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/form.css') }}"
+    />
+  </head>
+  <body>
+    <h2>登録フォーム</h2>
+    <!-- novalidate:フォームの送信時に入力内容の妥当性をチェックしない属性 -->
+    <form
+      action="{{ url_for('contact_sent_mail') }}"
+      method="POST"
+      novalidate="novalidate"
+    >
+      <table>
+        <tr>
+          <td>Xアカウント名</td>
+          <td>
+            <input
+              type="text"
+              name="oshi_name"
+              value="{{ oshi_name }}"
+              placeholder="xのアカウント名"
+            />
+          </td>
+        </tr>
+        <!-- <tr>
+                    <td>投稿画像</td>
+                    <td>
+                        <input type="file" name="post_image" value="{{ post_image }}" placeholder="投稿画像（肖像権など要確認）">
+                    </td>
+                </tr> -->
+        <tr>
+          <td>投稿日時</td>
+          <td>
+            <input
+              type="date"
+              name="posted_at"
+              value="{{ posted_at }}"
+              placeholder="カレンダーから選択してください"
+            />
+          </td>
+        </tr>
+        <tr>
+          <td>推しへのコメント</td>
+          <td>
+            <textarea
+              name="comment"
+              id="comment"
+              placeholder="コメントを入力してください"
+            >
+{{ comment }}</textarea
+            >
+          </td>
+        </tr>
+      </table>
+      <input type="submit" value="登録" />
+    </form>
+
+    <!-- messages変数の利用可能な範囲をwithステートメント内だけに限定 -->
+    <!-- flashメッセージがあれば、リストで取得する -->
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <ul>
+      {% for message in messages %}
+      <li class="flash">{{ message }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %} {% endwith %}
+  </body>
+</html>

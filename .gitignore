@@ -1,0 +1,6 @@
+.env
+/venv
+/apps/notification_mail_app/venv
+/apps/notification_mail_app/.env
+/migrations
+/apps/oshi_crud/model.pt

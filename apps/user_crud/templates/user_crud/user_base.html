@@ -1,0 +1,29 @@
+<!-- 共通テンプレート -->
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- titleを継承先で実装する -->
+    <title>{% block title %}{% endblock %}</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('user_crud.static', filename='css/user_crud.css') }}"
+    />
+  </head>
+  <body>
+    <div>
+      <!-- current_userはflask-login拡張機能がログイン時に自動でユーザー情報をセットしてテンプレートへ返す -->
+      <!-- ログイン時は、is_authenticatedプロパティがtrueになる -->
+      {% if current_user.is_authenticated %}
+      <p>
+        <span>{{ current_user.username }}</span>
+        <span><a href="{{ url_for('auth.logout') }}">ログアウト</a></span>
+      </p>
+      {% endif %}
+    </div>
+    {% block content %}{% endblock %}
+  </body>
+  <!-- 継承させるときは継承先のhtmlで継承させたいものをblock contentとendblockの間に挟む -->
+  <!-- ※block contentでなくてもよい -->
+</html>

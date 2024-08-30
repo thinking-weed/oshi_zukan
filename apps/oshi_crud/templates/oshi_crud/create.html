@@ -1,0 +1,50 @@
+{% extends "oshi_crud/base.html" %} {% block title %}推しへのコメント登録{%
+endblock %} {% block content %}
+<h2>推しの登録</h2>
+<!--novalidate="novalidate" フォームの送信時に入力内容の妥当性をチェックしない -->
+<form
+  action="{{ url_for('oshi_crud.create') }}"
+  method="POST"
+  enctype="multipart/form-data"
+  novalidate="novalidate"
+>
+  <!-- csrfトークンを自動生成、代わりに form.hidden()でもよい -->
+  {{ form.csrf_token }}
+  <!-- バリデートエラーは以下のようにform.パーツ名.errorsに設定される -->
+  <p>
+    {{ form.oshi_name.label }} {{
+    form.oshi_name(placeholder="推しのXアカウント名（入力省略可能）") }}
+  </p>
+  {% for error in form.oshi_name.errors %}
+  <span class="error_message">{{ error }}</span>
+  {% endfor %}
+  <p>
+    {{ form.posted_at.label }}
+    <input
+      type="datetime-local"
+      placeholder="下の写真のポスト投稿日時（入力省略可能）"
+      name="real_posted_at"
+      id="datetimeInput"
+    />
+  </p>
+  {% for error in form.posted_at.errors %}
+  <span class="error_message">{{ error }}</span>
+  {% endfor %}
+  <p>
+    {{ form.comment.label }} {{ form.comment(placeholder="推しへのコメント") }}
+  </p>
+  {% for error in form.comment.errors %}
+  <span class="error_message">{{ error }}</span>
+  {% endfor %}
+  <div>
+    <label>
+      <span>{{ form.image(class="form-control-file") }}</span>
+    </label>
+  </div>
+  {% for error in form.image.errors %}
+  <span class="error_message">{{ error }}</span>
+  {% endfor %}
+  <br />
+  <p>{{ form.submit() }}</p>
+</form>
+{% endblock %}

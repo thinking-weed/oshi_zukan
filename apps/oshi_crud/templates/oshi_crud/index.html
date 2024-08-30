@@ -1,0 +1,43 @@
+{% extends "oshi_crud/base.html" %} {% block content %}
+<!-- 画像アップロード画面へのリンクを追加する -->
+<div class="col-md-10 text-right dt-image-register-btn">
+  <a href="{{ url_for('oshi_crud.create') }}" class="btn btn-primary">
+    新しい推しを登録
+  </a>
+</div>
+<!-- 画像一覧を表示 -->
+{% for oshi_info in oshi_informations %}
+<div class="card col-md-7 dt-image-content">
+  <header class="d-flex justify-content-around">
+    <div class="oshi_name">Xアカウント名: {{ oshi_info.Oshi.oshi_name }}</div>
+    <div class="foroshi_comment">
+      <p>推しへのコメント</p>
+      <br />
+      <p>「{{ oshi_info.Oshi.comment }}」</p>
+    </div>
+    <div class="edit_btn btn btn-primary">
+      <a href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.Oshi.id) }}">
+        コメント編集
+      </a>
+    </div>
+    <div class="delete_btn">
+      <form
+        action="{{ url_for('oshi_crud.delete', oshi_id=oshi_info.Oshi.id) }}"
+        method="post"
+      >
+        {{ form.csrf_token }}
+        <input type="submit" value="削除" class="btn btn-primary" />
+      </form>
+    </div>
+  </header>
+  <section>
+    <div class="oshi_image">
+      <!-- image_urlではなくimage_pathでは？？ -->
+      <img
+        src="{{ url_for('oshi_crud.image_file', filename=oshi_info.Oshi.image_path) }}"
+        alt="アップロード画像"
+      />
+    </div>
+  </section>
+</div>
+{% endfor %} {% endblock %}
