@@ -1,10 +1,18 @@
-import random
+import random,uuid
 # OpenCV（画像や動画の処理ができる機能がまとめられたオープンソースライブラリ）
 # opencv-python が対応
 import cv2
+
 from flask import (
     current_app,
 )
+#このPILというのはPillowのこと
+from PIL import Image
+from pathlib import Path
+import torch,torchvision
+#公式ドキュメントにも慣例的にこのようにimportするとある
+import numpy as np
+import torchvision.transforms.functional
 
 #画像処理系関数
 
@@ -55,5 +63,59 @@ def draw_texts(result_image, line, c1, cv2, color, labels, label):
     return cv2
 
 def exec_detect(target_image_path):
-    #ラベルの読み込み
+    # configからラベルの読み込み
     labels = current_app.config["LABELS"]
+    # 画像パスから画像の読み込み
+    #ImageはPillowに入っている
+    image = Image.open(target_image_path)
+    # 画像データをテンソル型の数値データへ変換
+    image_tensor = torchvision.transforms.functional.to_tensor(image)
+
+    # 学習済みモデルの読み込み
+    # Pathの第二引数はBlueprintのディレクトリ名
+    # Pathはpathlibに入っている
+    # 拡張子.ptは、PyTorchでよく使われるモデル保存形式
+    model = torch.load(Path(current_app.root_path,"oshi_crud", "model.pt"))
+    #モデルの推論モードに切り替え
+    model = model.eval()
+    #推論の実行
+    output = model([image_tensor])[0]
+
+    # データベースに保存するために取得したtag名を重複しないように配列に追加
+    tags=[]
+    result_image = np.array(image.copy())
+    #学習済みモデルが検知した各物体の分だけ画像に追記
+    for box, label, score in zip(
+        output["boxes"], output["labels"], output["scores"]
+    ):
+        if score > 0.5 and labels[label] not in tags:
+            #枠線の色の決定
+            color = make_color(labels)
+            #枠線の作成
+            line = make_line(result_image)
+            #検知画面の枠線とテキストラベルの枠線の位置情報
+            c1 = (int(box[0]), int(box[1]))
+            c2 = (int(box[2]), int(box[3]))
+            #画像に枠線を追記
+            cv2 = draw_lines(c1, c2, result_image, line, color)
+            #画像にテキストラベルを追記
+            cv2 = draw_texts(result_image, line, c1, cv2, color, labels, label)
+            tags.append(labels[label])
+    
+    #検知後の画像ファイル名を生成
+    detected_image_file_name = str(uuid.uuid4()) + ".jpg"
+
+    #画像コピー先パスを取得する
+    detected_image_file_path = str(
+        Path(current_app.config["UPLOAD_FOLDER"],
+            detected_image_file_name)
+    )
+
+    #変換後の画像ファイルを保存先へコピーする
+    cv2.imwrite(
+        detected_image_file_path,
+        cv2.cvtColor(result_image, cv2.COLOR_RGB2BGR)
+    )
+
+    return tags, detected_image_file_name
+
