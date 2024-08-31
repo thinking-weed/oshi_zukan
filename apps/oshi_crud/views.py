@@ -21,6 +21,13 @@ from apps.app import db
 from apps.oshi_crud.models import Oshi
 from apps.user_crud.models import User
 from apps.oshi_crud.forms import OshiForm
+from apps.oshi_crud.detect_functions import (
+    make_color,
+    make_line,
+    draw_lines,
+    draw_texts,
+    exec_detect
+)
 
 #Blueprintでuser_crudアプリを生成する
 #apps直下のstaticを全体に適用する場合、blueprint作成時に
@@ -30,6 +37,8 @@ oshi_crud = Blueprint(
     __name__,
     template_folder="templates"
 )
+
+#----------------------------------------------------------------------------------------------
 
 @oshi_crud.route("/create", methods=["GET", "POST"])
 @login_required
@@ -76,11 +85,15 @@ def create():
     #まだpost送信されていない状態の場合、登録画面をレンダリング
     return render_template("oshi_crud/create.html", form=form)
 
+#----------------------------------------------------------------------------------------------
+
 # 画像ファイルを提供するエンドポイント
 @oshi_crud.route("/images/<path:filename>")
 @login_required
 def image_file(filename):
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+
+#----------------------------------------------------------------------------------------------
 
 # 画像一覧を表示するエンドポイント
 @oshi_crud.route("/index")
@@ -97,6 +110,8 @@ def index():
     )
     return render_template("oshi_crud/index.html",oshi_informations=oshi_informations, form=form)
 
+#----------------------------------------------------------------------------------------------
+
 #コメント一覧を表示するエンドポイント
 @oshi_crud.route("/comment_list")
 @login_required
@@ -106,34 +121,9 @@ def comment_list():
     oshi_informations = Oshi.query.all()
     return render_template("oshi_crud/comment_list.html",oshi_informations=oshi_informations, form=form)
 
+#----------------------------------------------------------------------------------------------
 
-# コメント追加画面のエンドポイント
-#デコレータのRule（第一引数）に変数を<>で組み込む
-# @oshi_crud.route("/edit_info/<oshi_id>", methods=["GET","POST"])
-# @login_required
-# def edit_info(oshi_id):
-#     form = OshiForm()
-
-#     #Userモデルを利用してユーザーを取得する
-#     #指定されたidのレコードを取得 ※複数引数（=条件）を渡した場合はAND条件となる
-#     oshi = Oshi.query.filter_by(id=oshi_id).first()
-#     # コロンで分割(maxsplit で最大分割数を指定)
-#     split_s = oshi.oshi_name.split('@', maxsplit=1)
-#     for_search = str(split_s[-1])
-#     # formからサブミットされた場合は推しの情報を更新し、画像一覧画面へリダイレクトする
-#     if form.validate_on_submit():
-#         oshi.oshi_name = form.oshi_name.data
-#         oshi.posted_at = form.posted_at.data
-#         oshi.comment = form.comment.data
-#         db.session.add(oshi)
-#         db.session.commit()
-#         return redirect(url_for("oshi_crud.edit_info",oshi_id=oshi.id))
-    
-#     #GETの（=初回のまだ更新していない）場合はHTMLを返す
-#     #user = User.query.filter_by(id=user_id).first()で取得したuserをuserという変数名で渡す
-#     #form = UserForm()をformという変数名で渡す
-#     return render_template("oshi_crud/edit_info.html", oshi=oshi, for_search=for_search ,form=form)
-
+#コメント編集をするためのエンドポイント（修正が必要）
 @oshi_crud.route("/edit_info/<oshi_id>", methods=["GET", "POST", "PATCH"])
 @login_required
 def edit_info(oshi_id):
@@ -159,6 +149,7 @@ def edit_info(oshi_id):
     # GETの（=初回のまだ更新していない）場合はHTMLを返す
     return render_template("oshi_crud/edit_info.html", oshi=oshi, for_search=for_search, form=form)
 
+#----------------------------------------------------------------------------------------------
 
 #削除はPOSTしか利用しないので、methodsにはPOSTだけを指定
 @oshi_crud.route("/<oshi_id>/delete", methods=["POST"])
@@ -170,3 +161,7 @@ def delete(oshi_id):
     db.session.commit()
     return redirect(url_for("oshi_crud.index"))
 #削除後、idは自動的に修正される
+
+#-----------------------------------------------------------------------------------------------
+
+
