@@ -6,6 +6,8 @@ import cv2
 from flask import (
     current_app,
 )
+from apps.app import db
+from apps.oshi_crud.models import OshiImageTag
 #このPILというのはPillowのこと
 from PIL import Image
 from pathlib import Path
@@ -102,7 +104,7 @@ def exec_detect(target_image_path):
             cv2 = draw_texts(result_image, line, c1, cv2, color, labels, label)
             tags.append(labels[label])
     
-    #検知後の画像ファイル名を生成
+    #検知後の画像ファイル名をUUIDで生成
     detected_image_file_name = str(uuid.uuid4()) + ".jpg"
 
     #画像コピー先パスを取得する
@@ -116,6 +118,19 @@ def exec_detect(target_image_path):
         detected_image_file_path,
         cv2.cvtColor(result_image, cv2.COLOR_RGB2BGR)
     )
-
+    # 検知後の画像ファイル名をデータベースに保存するためにタグ一覧の値を返す
     return tags, detected_image_file_name
+
+def save_detected_image_tags(oshi_image, tags, detected_image_file_name):
+    #検知後画像の保存先パスをDBに保存
+    oshi_image.image_path = detected_image_file_name
+    #検知フラグをTrueにする
+    oshi_image.is_detected = True
+    db.session.add(oshi_image)
+
+    # oshi_info_tagsレコードを作成
+    for tag in tags:
+        oshi_image_tag = OshiImageTag(oshi_image_id = oshi_image.id, tag_name = tag)
+        db.session.add(oshi_image_tag)
+        db.session.commit()
 
