@@ -1,10 +1,13 @@
-import os,uuid
+import os, uuid, random, cv2, torch, torchvision
+import numpy as np
 #アップロードされたファイル名をそのまま利用するとセキリティ上の問題がある可能性があるため、
 #ここではアップロードファイル名をuuid形式に変換
 #安全なファイル名に変換するwerkzeug.utilsにsecure_filename()関数があるが、ファイル名が日本語の場合に
 # 動作しないケースがあるらしく、ここでは利用しない
 from pathlib import Path
+from PIL import Image
 from sqlalchemy import desc
+from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from flask import (
     Blueprint,
@@ -18,7 +21,7 @@ from flask import (
 )
 from flask_login import current_user,login_required
 from apps.app import db
-from apps.oshi_crud.models import Oshi
+from apps.oshi_crud.models import Oshi, OshiImageTag
 from apps.user_crud.models import User
 from apps.oshi_crud.forms import OshiForm
 from apps.oshi_crud.detect_functions import (
@@ -26,7 +29,8 @@ from apps.oshi_crud.detect_functions import (
     make_line,
     draw_lines,
     draw_texts,
-    exec_detect
+    exec_detect,
+    save_detected_image_tags
 )
 
 #Blueprintでuser_crudアプリを生成する
@@ -162,6 +166,17 @@ def delete(oshi_id):
     return redirect(url_for("oshi_crud.index"))
 #削除後、idは自動的に修正される
 
-#-----------------------------------------------------------------------------------------------
+#--------------------------物体検知エンドポイント------------------------------------------------
 
+@oshi_crud.route("/detect/<string:oshi_image_id>", methods=["POST"])
+@login_required
+def detect(oshi_image_id):
+    oshi_image = (
+        Oshi.query.filter(Oshi.id == oshi_image_id).first()
+    )
+    if oshi_image is None:
+        flash("物体検知対象の画像が存在しません。")
+        return redirect(url_for("oshi_crud.index"))
+    
+    
 
