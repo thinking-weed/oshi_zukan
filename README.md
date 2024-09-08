@@ -1,6 +1,6 @@
-# object_detection_app（画像検知アプリ、さくぞー語録図鑑）
+# object_detection_app（推し図鑑（自分の推しの画像収集図鑑）・画像検知アプリ）
 
-git clone後以下のコマンドで動くはず・・・
+git clone後以下のコマンドで動くはず・・・（Pythonのversionは3.9.6を使用しています）
 
 <h3>powershellでvenvを作成・有効化</h3>
 
