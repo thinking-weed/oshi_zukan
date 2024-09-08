@@ -23,7 +23,7 @@ from flask_login import current_user,login_required
 from apps.app import db
 from apps.oshi_crud.models import Oshi, OshiImageTag
 from apps.user_crud.models import User
-from apps.oshi_crud.forms import OshiForm
+from apps.oshi_crud.forms import OshiForm,DetectorForm
 from apps.oshi_crud.detect_functions import (
     make_color,
     make_line,
@@ -47,17 +47,17 @@ oshi_crud = Blueprint(
 @oshi_crud.route("/create", methods=["GET", "POST"])
 @login_required
 def create():
-    form = OshiForm()
+    oshi_form = OshiForm()
     # フォームの値をバリデートする
     #.validate_on_submitはフォームからsubmitされた際に実行されるやつ
-    if form.validate_on_submit():
+    if oshi_form.validate_on_submit():
         #formにポストの投稿日時を取得して表示形式を変換
         first_posted_at_data = request.form.get('real_posted_at')
         posted_at_data = datetime.strptime(first_posted_at_data, '%Y-%m-%dT%H:%M')
         formatted_date = posted_at_data.strftime('%Y年%m月%d日 %H:%M')
 
         #アップロードされた画像ファイルを取得
-        file = form.image.data
+        file = oshi_form.image.data
         # ファイルのファイル名と拡張子を取得し、ファイル名をuuidに変換する
         # 安全なファイル名に変換するwerkzeug.utilsにsecure_filename()関数があるが、
         # ファイル名が日本語の場合に動作しないケースがあるため、参考書では利用していない
@@ -73,10 +73,10 @@ def create():
         #Oshiの情報を"DB"に保存する
         oshi_info = Oshi(
             user_id = current_user.id,
-            oshi_name=form.oshi_name.data,
+            oshi_name=oshi_form.oshi_name.data,
             posted_at=str(formatted_date),
             # .datetime.strftime('%m月%d日%H時%M分')
-            comment=form.comment.data,
+            comment=oshi_form.comment.data,
             image_path = image_uuid_file_name
         )
         #登録情報を追加してコミット（＝変更反映）する
@@ -87,7 +87,7 @@ def create():
         return redirect(url_for("oshi_crud.index"))
     #OshiFormで設定した「設定」をform=formで渡す
     #まだpost送信されていない状態の場合、登録画面をレンダリング
-    return render_template("oshi_crud/create.html", form=form)
+    return render_template("oshi_crud/create.html", oshi_form=oshi_form)
 
 #----------------------------------------------------------------------------------------------
 
@@ -103,16 +103,37 @@ def image_file(filename):
 @oshi_crud.route("/index")
 @login_required
 def index():
-    form = OshiForm()
     #UserとOshiをJoin（テーブルを合体）して画像一覧を取得
     oshi_informations = (
-        db.session.query(User,Oshi)
+        db.session.query(User, Oshi)
         .join(Oshi)
-        .filter(User.id == Oshi.user_id)
-        .order_by(desc("id"))#逆順に並べ替える
+        .filter(User.id == Oshi.user_id)#.order_by(desc("id"))#逆順に並べ替える
         .all()
     )
-    return render_template("oshi_crud/index.html",oshi_informations=oshi_informations, form=form)
+
+    #画像に紐付くタグ一覧を取得し、画像IDをキーにした辞書にセット
+    oshi_image_tag_dict = {}
+    for oshi_info in oshi_informations:
+        #画像に紐付くタグ一覧を取得する
+        oshi_image_tags = (
+            OshiImageTag.query.filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+            .all()
+        )
+        oshi_image_tag_dict[oshi_info.Oshi.id] = oshi_image_tags
+
+    #物体検知フォームをインスタンス化
+    detector_form = DetectorForm()
+    #同様にフォームをインスタンス化
+    oshi_form = OshiForm()
+    return render_template(
+        "oshi_crud/index.html",
+        oshi_informations=oshi_informations,
+        #タグ一覧をテンプレートに渡す
+        oshi_image_tag_dict = oshi_image_tag_dict,
+        #物体検知フォームをテンプレートに渡す
+        detector_form = detector_form,
+        oshi_form=oshi_form
+    )
 
 #----------------------------------------------------------------------------------------------
 
@@ -178,5 +199,23 @@ def detect(oshi_image_id):
         flash("物体検知対象の画像が存在しません。")
         return redirect(url_for("oshi_crud.index"))
     
-    
+    #物体検知対象の画像パスを取得する
+    target_image_path = Path(
+        current_app.config["UPLOAD_FOLDER"], oshi_image.image_path
+    )
 
+    #物体検知を実行してタグと変換後の画像パスを取得する
+    tags, detected_image_file_name = exec_detect(target_image_path)
+
+    try:
+        #データベースにタグと変換後の画像パス情報を保存する
+        save_detected_image_tags(oshi_image, tags, detected_image_file_name)
+    except SQLAlchemyError as e:
+        flash("物体検知処理でエラーが発生しました。")
+        #ロールバックする
+        db.session.rollback()
+        #エラーログ出力
+        current_app.logger.error(e)
+        return redirect(url_for("oshi_crud.index"))
+    
+    return redirect(url_for("oshi_crud.index"))

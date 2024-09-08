@@ -1,4 +1,13 @@
 {% extends "oshi_crud/base.html" %} {% block content %}
+<!-- flashエラーを表示する -->
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul>
+  {% for message in messages %}
+  <li class="flash">{{ message }}</li>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %}
+
 <!-- 画像アップロード画面へのリンクを追加する -->
 <div class="col-md-10 text-right dt-image-register-btn">
   <a href="{{ url_for('oshi_crud.create') }}" class="btn btn-primary">
@@ -9,15 +18,18 @@
 {% for oshi_info in oshi_informations %}
 <div class="card col-md-7 dt-image-content">
   <header class="d-flex justify-content-around">
-    <div class="oshi_name">Xアカウント名: {{ oshi_info.Oshi.oshi_name }}</div>
-    <div class="foroshi_comment">
+    <div>
+      <div class="oshi_name">Xアカウント名: {{ oshi_info.Oshi.oshi_name }}</div>
+      <div class="posted_at">ポスト投稿日時：{{ oshi_info.Oshi.posted_at }}</div>
+    </div>
+    <div class="for_oshi_comment">
       <p>推しへのコメント</p>
       <br />
       <p>「{{ oshi_info.Oshi.comment }}」</p>
     </div>
     <div class="edit_btn btn btn-primary">
       <a href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.Oshi.id) }}">
-        コメント編集
+        編集
       </a>
     </div>
     <div class="delete_btn">
@@ -25,8 +37,20 @@
         action="{{ url_for('oshi_crud.delete', oshi_id=oshi_info.Oshi.id) }}"
         method="post"
       >
-        {{ form.csrf_token }}
+        {{ oshi_form.csrf_token }}
         <input type="submit" value="削除" class="btn btn-primary" />
+      </form>
+    </div>
+    <div class="detect_btn">
+      <form
+        action="{{ url_for('oshi_crud.detect', oshi_image_id = oshi_info.Oshi.id) }}"
+        method="POST"
+      >
+        {{ detector_form.csrf_token }} {% if current_user.id ==
+        oshi_info.Oshi.id and oshi_info.Oshi.is_detected == False %} {{
+        detector_form.submit(class="btn btn-primary") }} {% else %} {{
+        detector_form.submit(class="btn btn-primary") }}
+        {% endif %}
       </form>
     </div>
   </header>
@@ -39,5 +63,12 @@
       />
     </div>
   </section>
+  <!-- タグ情報を表示する -->
+  <footer>
+    {% for tag in oshi_image_tag_dict[oshi_info.Oshi.id] %} 
+    {{ tag.tag_name }}
+    {% endfor %}
+  </footer>
 </div>
-{% endfor %} {% endblock %}
+{% endfor %}
+{% endblock %}

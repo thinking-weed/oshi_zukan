@@ -20,7 +20,7 @@ class User(db.Model, UserMixin):
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
     #backrefを利用しrelation情報を設定
-    oshi_images = db.relationship("Oshi",backref="user")
+    oshi_images = db.relationship("Oshi",backref="user", order_by="desc(Oshi.id)")
 
 
     #パスワードをセットするためのプロパティ

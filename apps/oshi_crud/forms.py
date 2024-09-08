@@ -27,7 +27,7 @@ class OshiForm(FlaskForm):
         validators=[
             FileRequired("画像ファイルを指定してください。"),
             #許可する拡張子を指定
-            FileAllowed(["png", "jpg", "jpeg"],"サポートされていない画像形式です")
+            FileAllowed(["png", "jpg", "jpeg"], "サポートされていない画像形式です。")
         ]
     )
     #submitの文言を設定する

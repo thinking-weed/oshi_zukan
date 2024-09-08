@@ -1,5 +1,6 @@
-{% extends "oshi_crud/base.html" %} {% block title %}推しへのコメント登録{%
-endblock %} {% block content %}
+{% extends "oshi_crud/base.html" %}
+{% block title %}推しへのコメント登録{% endblock %}
+{% block content %}
 <h2>推しの登録</h2>
 <!--novalidate="novalidate" フォームの送信時に入力内容の妥当性をチェックしない -->
 <form
@@ -9,17 +10,17 @@ endblock %} {% block content %}
   novalidate="novalidate"
 >
   <!-- csrfトークンを自動生成、代わりに form.hidden()でもよい -->
-  {{ form.csrf_token }}
+  {{ oshi_form.csrf_token }}
   <!-- バリデートエラーは以下のようにform.パーツ名.errorsに設定される -->
   <p>
-    {{ form.oshi_name.label }} {{
-    form.oshi_name(placeholder="推しのXアカウント名（入力省略可能）") }}
+    {{ oshi_form.oshi_name.label }}
+    {{ oshi_form.oshi_name(placeholder="推しのXアカウント名（入力省略可能）") }}
   </p>
-  {% for error in form.oshi_name.errors %}
+  {% for error in oshi_form.oshi_name.errors %}
   <span class="error_message">{{ error }}</span>
   {% endfor %}
   <p>
-    {{ form.posted_at.label }}
+    {{ oshi_form.posted_at.label }}
     <input
       type="datetime-local"
       placeholder="下の写真のポスト投稿日時（入力省略可能）"
@@ -27,24 +28,25 @@ endblock %} {% block content %}
       id="datetimeInput"
     />
   </p>
-  {% for error in form.posted_at.errors %}
+  {% for error in oshi_form.posted_at.errors %}
   <span class="error_message">{{ error }}</span>
   {% endfor %}
   <p>
-    {{ form.comment.label }} {{ form.comment(placeholder="推しへのコメント") }}
+    {{ oshi_form.comment.label }}
+    {{ oshi_form.comment(placeholder="推しへのコメント") }}
   </p>
-  {% for error in form.comment.errors %}
+  {% for error in oshi_form.comment.errors %}
   <span class="error_message">{{ error }}</span>
   {% endfor %}
   <div>
     <label>
-      <span>{{ form.image(class="form-control-file") }}</span>
+      <span>{{ oshi_form.image(class="form-control-file") }}</span>
     </label>
   </div>
-  {% for error in form.image.errors %}
+  {% for error in oshi_form.image.errors %}
   <span class="error_message">{{ error }}</span>
   {% endfor %}
   <br />
-  <p>{{ form.submit() }}</p>
+  <p>{{ oshi_form.submit() }}</p>
 </form>
 {% endblock %}
