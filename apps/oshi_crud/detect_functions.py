@@ -3,9 +3,7 @@ import random,uuid
 # opencv-python が対応
 import cv2
 
-from flask import (
-    current_app,
-)
+from flask import current_app
 from apps.app import db
 from apps.oshi_crud.models import OshiImageTag
 #このPILというのはPillowのこと
@@ -102,7 +100,7 @@ def exec_detect(target_image_path):
             cv2 = draw_lines(c1, c2, result_image, line, color)
             #画像にテキストラベルを追記
             cv2 = draw_texts(result_image, line, c1, cv2, color, labels, label)
-            tags.append(labels[label])
+            tags.append(labels[label]+",")
     
     #検知後の画像ファイル名をUUIDで生成
     detected_image_file_name = str(uuid.uuid4()) + ".jpg"

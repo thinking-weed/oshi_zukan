@@ -85,16 +85,20 @@ input[type="search"] {
 }
 
 .oshi_name {
-  margin: auto 0.4rem;
+  margin: auto 0.2rem;
 }
 .for_oshi_comment {
-  margin: auto 0;
+  margin: auto 0.2rem;
 }
 .for_oshi_comment p {
   margin: 0;
 }
 .edit_btn, .delete_btn , .detect_btn{
-  margin: auto 0.2rem;
+  margin: auto 0.5rem;
+}
+.delete_btn , .detect_btn{
+  display: block;
+  padding: auto;
 }
 .edit_btn a {
   color: white;

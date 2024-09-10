@@ -24,6 +24,7 @@ from apps.app import db
 from apps.oshi_crud.models import Oshi, OshiImageTag
 from apps.user_crud.models import User
 from apps.oshi_crud.forms import OshiForm,DetectorForm
+from apps.oshi_crud.edit_functions import save_image
 from apps.oshi_crud.detect_functions import (
     make_color,
     make_line,
@@ -149,30 +150,37 @@ def comment_list():
 #----------------------------------------------------------------------------------------------
 
 #コメント編集をするためのエンドポイント（修正が必要）
-@oshi_crud.route("/edit_info/<oshi_id>", methods=["GET", "POST", "PATCH"])
+@oshi_crud.route("/edit_info/<oshi_id>", methods=["GET", "POST"])
 @login_required
 def edit_info(oshi_id):
-    # 指定されたidのレコードを取得
-    oshi = Oshi.query.filter_by(id=oshi_id).first()
-    
-    # フォームを初期化する
-    form = OshiForm(obj=oshi)
+    oshi = Oshi.query.filter_by(id=oshi_id).first_or_404()
+    oshi_form = OshiForm(obj=oshi)
 
-    # コロンで分割(maxsplit で最大分割数を指定)
     split_s = oshi.oshi_name.split('@', maxsplit=1)
     for_search = str(split_s[-1])
 
-    # formからサブミットされた場合は推しの情報を更新し、画像一覧画面へリダイレクトする
-    if form.validate_on_submit():
-        oshi.oshi_name = form.oshi_name.data
-        oshi.posted_at = form.posted_at.data
-        oshi.comment = form.comment.data
-        db.session.add(oshi)
+    if oshi_form.validate_on_submit():
+        oshi.oshi_name = oshi_form.oshi_name.data
+        oshi.comment = oshi_form.comment.data
+
+        # 新しい画像がアップロードされた場合のみ処理する
+        if oshi_form.image.data:
+            image_file = oshi_form.image.data
+            image_filename = save_image(image_file)  # 画像保存関数
+            oshi.image_path = image_filename  # 画像パスを更新
+
         db.session.commit()
+        flash("情報が更新されました。", "success")
         return redirect(url_for("oshi_crud.index"))
 
-    # GETの（=初回のまだ更新していない）場合はHTMLを返す
-    return render_template("oshi_crud/edit_info.html", oshi=oshi, for_search=for_search, form=form)
+    if oshi_form.errors:
+        for field, errors in oshi_form.errors.items():
+            for error in errors:
+                flash(f"{field}: {error}", "danger")
+
+    return render_template("oshi_crud/edit_info.html", oshi=oshi, for_search=for_search, oshi_form=oshi_form)
+
+
 
 #----------------------------------------------------------------------------------------------
 

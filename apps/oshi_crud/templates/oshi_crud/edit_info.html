@@ -1,7 +1,7 @@
 {% extends "oshi_crud/base.html" %}
-{% block title %}推しの情報編集{% endblock %}
+{% block title %}推しのコメント編集{% endblock %}
 {% block content %}
-<h2>推し情報編集</h2>
+<h2>推しへのコメント編集</h2>
 <form
   action="{{ url_for('oshi_crud.edit_info', oshi_id=oshi.id) }}"
   method="post"
@@ -9,32 +9,31 @@
   novalidate="novalidate"
 >
   <!-- csrfトークンと隠しフィールドを自動生成 -->
-  {{ form.hidden_tag() }}
+  {{ oshi_form.hidden_tag() }}
 
   <div>
     <div>
       <p class="edit_area">
-        {{ form.oshi_name.label }}
-        {{ form.oshi_name(placeholder="推しの名前またはXアカウント名") }}
+        {{ oshi_form.oshi_name.label }}
+        {{ oshi_form.oshi_name(placeholder="推しの名前またはXアカウント名") }}
       </p>
       <p>
         <a href="https://x.com/{{ for_search }}">推しがXをしていれば、そのアカウントを確認する</a>
       </p>
-      {% for error in form.oshi_name.errors %}
+      {% for error in oshi_form.oshi_name.errors %}
       <span class="error_message">{{ error }}</span>
       {% endfor %}
+      
+      <!-- 投稿日時を表示だけする（非編集） -->
       <p class="edit_area">
-        {{ form.posted_at.label }}
-        {{ form.posted_at(placeholder="X投稿日時または写真日時") }}
+        投稿日時: {{ oshi.posted_at }}
       </p>
-      {% for error in form.posted_at.errors %}
-      <span class="error_message">{{ error }}</span>
-      {% endfor %}
+
       <p class="edit_area">
-        {{ form.comment.label }}
-        {{ form.comment(placeholder="推しへのコメント") }}
+        {{ oshi_form.comment.label }}
+        {{ oshi_form.comment(placeholder="推しへのコメント") }}
       </p>
-      {% for error in form.comment.errors %}
+      {% for error in oshi_form.comment.errors %}
       <span class="error_message">{{ error }}</span>
       {% endfor %}
     </div>
@@ -48,7 +47,7 @@
 </form>
 
 <form action="{{ url_for('oshi_crud.delete', oshi_id=oshi.id) }}" method="POST">
-  {{ form.hidden_tag() }}
+  {{ oshi_form.hidden_tag() }}
   <input type="submit" value="削除" />
 </form>
 {% endblock %}

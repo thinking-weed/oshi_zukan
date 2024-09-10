@@ -24,27 +24,27 @@
     </div>
     <div class="for_oshi_comment">
       <p>推しへのコメント</p>
-      <br />
       <p>「{{ oshi_info.Oshi.comment }}」</p>
     </div>
     <div class="edit_btn btn btn-primary">
       <a href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.Oshi.id) }}">
-        編集
+        コメント<br>編集
       </a>
     </div>
-    <div class="delete_btn">
+    <div>
       <form
         action="{{ url_for('oshi_crud.delete', oshi_id=oshi_info.Oshi.id) }}"
         method="post"
+        class="delete_btn"
       >
         {{ oshi_form.csrf_token }}
         <input type="submit" value="削除" class="btn btn-primary" />
       </form>
-    </div>
-    <div class="detect_btn">
       <form
         action="{{ url_for('oshi_crud.detect', oshi_image_id = oshi_info.Oshi.id) }}"
         method="POST"
+        class="detect_btn"
+        style="margin-top: 0.5rem;"
       >
         {{ detector_form.csrf_token }} {% if current_user.id ==
         oshi_info.Oshi.id and oshi_info.Oshi.is_detected == False %} {{

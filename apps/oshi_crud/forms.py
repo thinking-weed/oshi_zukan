@@ -25,7 +25,6 @@ class OshiForm(FlaskForm):
     #ファイルフィールドに必要なバリデーションを設定する
     image = FileField(
         validators=[
-            FileRequired("画像ファイルを指定してください。"),
             #許可する拡張子を指定
             FileAllowed(["png", "jpg", "jpeg"], "サポートされていない画像形式です。")
         ]
