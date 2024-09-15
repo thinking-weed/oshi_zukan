@@ -7,71 +7,71 @@ h4 {
 input[type="search"] {
   background-color: #f5f5f5;
 }
-.dt-auth-main {
+.detect-auth-main {
   width: 400px;
   margin-top: 45px;
 }
-.dt-auth-main .card {
+.detect-auth-main .card {
   box-shadow: 0 12px 18px 2px rgba(34, 0, 51, 0.04),
     0 6px 22px 4px rgba(7, 48, 114, 0.12),
     0 6px 10px -4px rgba(14, 13, 26, 0.12) !important;
   border-radius: 16px;
 }
-.dt-auth-main .dt-auth-login {
+.detect-auth-main .detect-auth-login {
   height: 300px !important;
 }
-.dt-auth-main .dt-auth-signup {
+.detect-auth-main .detect-auth-signup {
   height: 340px !important;
 }
-.dt-auth-main header {
+.detect-auth-main header {
   text-align: center;
   margin: 30px 0 0 0;
   font-size: 24px;
 }
-.dt-auth-main section {
+.detect-auth-main section {
   width: 300px;
   margin: 10px auto;
 }
-.dt-auth-flash {
+.detect-auth-flash {
   font-size: 14px;
   color: #9c1a1c;
 }
-.dt-auth-input {
+.detect-auth-input {
   margin-top: 10px;
 }
-.dt-auth-btn {
+.detect-auth-btn {
   margin: 30px 0 0 0;
 }
-.dt-search {
+.detect-search {
   height: 28px !important;
 }
-.dt-image-content {
+.detect-image-content {
   margin: 20px auto;
   padding: 0;
 }
-.dt-image-username {
+.detect-image-username {
   padding-top: 15px;
 }
-.dt-image-register-btn {
+.detect-image-register-btn {
   padding: 10px 47px 0 0;
 }
-.dt-image-content header {
+.detect-image-content header {
   padding: 10px 10px 0 10px;
 }
-.dt-image-content section {
+.detect-image-content section {
   padding: 10px 0;
   margin: auto;
 }
-.dt-image-content footer {
+.detect-image-content footer {
   padding: 10px;
 }
-.dt-image-content section img {
+.detect-image-content section img {
   width: 100%;
 }
-.dt-image-file {
+.detect-image-file {
   display: none;
 }
-.dt-image-submit {
+.detect-image-submit {
   margin-left: 10px;
 }
 .login-user {
@@ -86,17 +86,29 @@ input[type="search"] {
 
 .oshi_name {
   margin: auto 0.2rem;
+  width: 90%;
+}
+.posted_at {
+  margin: auto 0.2rem;
+  width: 90%;
+}
+.oshi_name_and_posted_at {
+  width: 50%;
 }
 .for_oshi_comment {
-  margin: auto 0.2rem;
+  margin-right: 1rem;
 }
+
 .for_oshi_comment p {
   margin: 0;
 }
-.edit_btn, .delete_btn , .detect_btn{
+.edit_btn,
+.delete_btn,
+.detect_btn {
   margin: auto 0.5rem;
 }
-.delete_btn , .detect_btn{
+.delete_btn,
+.detect_btn {
   display: block;
   padding: auto;
 }
@@ -114,5 +126,11 @@ th,
 td {
   /* 1pxの実線にして色を調節する */
   border: 1px solid #c0c0c0;
+  text-align: center;
+}
+
+.oshi_image img{
+  width: 100%;
+  margin: 0.5rem 0;
   text-align: center;
 }

@@ -1,11 +1,9 @@
-import os, uuid, random, cv2, torch, torchvision
-import numpy as np
+import uuid
 #アップロードされたファイル名をそのまま利用するとセキリティ上の問題がある可能性があるため、
 #ここではアップロードファイル名をuuid形式に変換
 #安全なファイル名に変換するwerkzeug.utilsにsecure_filename()関数があるが、ファイル名が日本語の場合に
 # 動作しないケースがあるらしく、ここでは利用しない
 from pathlib import Path
-from PIL import Image
 from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
@@ -227,3 +225,67 @@ def detect(oshi_image_id):
         return redirect(url_for("oshi_crud.index"))
     
     return redirect(url_for("oshi_crud.index"))
+
+# -----------------------------画像検索機能エンドポイント-----------------------
+
+# 検知で出るタグのいくつかを入力すると該当するタグを部分一致で検索し、画像を絞りこむ
+
+@oshi_crud.route("/images/serach", methods=["GET"])
+def search():
+    # 画像一覧を取得する
+    oshi_informations = db.session.query(User, Oshi).join(
+        Oshi, User.id == Oshi.user_id
+    )
+
+    # GETパラメータから検索ワードを取得する
+    search_text = request.args.get("search")
+    oshi_image_tag_dict = {}
+    filtered_oshi_informations = []
+
+    # oshi_informationsをループしoshi_informationsに紐付くタグ情報を検索する
+    for oshi_info in oshi_informations:
+        
+        # 検索ワードが空の場合は全てのタグを取得する
+        if not search_text:
+            #タグ一覧を取得する
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .all()
+            )
+        else:
+            # 検索ワードで絞り込んだタグを取得する
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .filter(OshiImageTag.tag_name.like("%" + search_text + "%"))
+                .all()
+            )
+
+            #検索ワードに引っかかるタグが見つからなかったら画像を返さない
+            if not oshi_image_tags:
+                continue
+
+            #検索ワードに引っかかるタグがある場合はタグ情報を取得し直す
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .all()
+            )
+        
+        #oshi_image_id をキーとする辞書にタグ情報をセットする
+        oshi_image_tag_dict[oshi_info.Oshi.id] = oshi_image_tags
+
+        #絞り込み結果のoshi_info情報を配列セットする
+        filtered_oshi_informations.append(oshi_info)
+    
+    detector_form = DetectorForm()
+
+    return render_template(
+        "oshi_crud/index.html",
+        #絞り込んだoshi_informations配列を渡す
+        #indexエンドポイントと渡す変数名の整合性がとれるように注意
+        oshi_informations = filtered_oshi_informations,
+        oshi_image_tag_dict = oshi_image_tag_dict,
+        detector_form = detector_form
+    )

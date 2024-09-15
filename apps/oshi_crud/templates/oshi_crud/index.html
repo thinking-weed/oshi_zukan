@@ -9,66 +9,72 @@
 {% endif %} {% endwith %}
 
 <!-- 画像アップロード画面へのリンクを追加する -->
-<div class="col-md-10 text-right dt-image-register-btn">
+<div class="col-md-10 text-right detect-image-register-btn">
   <a href="{{ url_for('oshi_crud.create') }}" class="btn btn-primary">
     新しい推しを登録
   </a>
 </div>
 <!-- 画像一覧を表示 -->
 {% for oshi_info in oshi_informations %}
-<div class="card col-md-7 dt-image-content">
-  <header class="d-flex justify-content-around">
-    <div>
-      <div class="oshi_name">Xアカウント名: {{ oshi_info.Oshi.oshi_name }}</div>
-      <div class="posted_at">ポスト投稿日時：{{ oshi_info.Oshi.posted_at }}</div>
-    </div>
-    <div class="for_oshi_comment">
-      <p>推しへのコメント</p>
-      <p>「{{ oshi_info.Oshi.comment }}」</p>
-    </div>
-    <div class="edit_btn btn btn-primary">
-      <a href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.Oshi.id) }}">
-        コメント<br>編集
-      </a>
-    </div>
-    <div>
-      <form
-        action="{{ url_for('oshi_crud.delete', oshi_id=oshi_info.Oshi.id) }}"
-        method="post"
-        class="delete_btn"
-      >
-        {{ oshi_form.csrf_token }}
-        <input type="submit" value="削除" class="btn btn-primary" />
-      </form>
-      <form
-        action="{{ url_for('oshi_crud.detect', oshi_image_id = oshi_info.Oshi.id) }}"
-        method="POST"
-        class="detect_btn"
-        style="margin-top: 0.5rem;"
-      >
-        {{ detector_form.csrf_token }} {% if current_user.id ==
-        oshi_info.Oshi.id and oshi_info.Oshi.is_detected == False %} {{
-        detector_form.submit(class="btn btn-primary") }} {% else %} {{
-        detector_form.submit(class="btn btn-primary") }}
-        {% endif %}
-      </form>
-    </div>
-  </header>
-  <section>
-    <div class="oshi_image">
-      <!-- image_urlではなくimage_pathでは？？ -->
-      <img
-        src="{{ url_for('oshi_crud.image_file', filename=oshi_info.Oshi.image_path) }}"
-        alt="アップロード画像"
-      />
-    </div>
-  </section>
-  <!-- タグ情報を表示する -->
-  <footer>
-    {% for tag in oshi_image_tag_dict[oshi_info.Oshi.id] %} 
-    {{ tag.tag_name }}
-    {% endfor %}
-  </footer>
+<div class="card col-md-7 detect-image-content">
+  <div>
+    <header class="d-flex">
+      <div class="oshi_name_and_posted_at">
+        <div class="oshi_name">
+          Xアカウント名: {{ oshi_info.Oshi.oshi_name }}
+        </div>
+        <div class="posted_at">
+          ポスト投稿日時：{{ oshi_info.Oshi.posted_at }}
+        </div>
+      </div>
+      <div class="for_oshi_comment">
+        <p>推しへのコメント</p>
+        <p>「{{ oshi_info.Oshi.comment }}」</p>
+      </div>
+      <div class="edit_btn btn btn-primary">
+        <a
+          href="{{ url_for('oshi_crud.edit_info', oshi_id=oshi_info.Oshi.id) }}"
+        >
+          コメント編集<br/>Xのプロフ確認
+        </a>
+      </div>
+      <div>
+        <form
+          action="{{ url_for('oshi_crud.delete', oshi_id=oshi_info.Oshi.id) }}"
+          method="post"
+          class="delete_btn"
+        >
+          {{ oshi_form.csrf_token }}
+          <input type="submit" value="削除" class="btn btn-primary" />
+        </form>
+        <form
+          action="{{ url_for('oshi_crud.detect', oshi_image_id = oshi_info.Oshi.id) }}"
+          method="POST"
+          class="detect_btn"
+          style="margin-top: 0.5rem"
+        >
+          {{ detector_form.csrf_token }} {% if current_user.id ==
+          oshi_info.Oshi.id and oshi_info.Oshi.is_detected == False %} {{
+          detector_form.submit(class="btn btn-primary") }} {% else %} {{
+          detector_form.submit(class="btn btn-primary") }} {% endif %}
+        </form>
+      </div>
+    </header>
+    <section class="image_section">
+      <div class="oshi_image">
+        <!-- image_urlではなくimage_pathでは？？ -->
+        <img
+          src="{{ url_for('oshi_crud.image_file', filename=oshi_info.Oshi.image_path) }}"
+          alt="アップロード画像"
+        />
+      </div>
+    </section>
+    <!-- タグ情報を表示する -->
+    <footer>
+      {% for tag in oshi_image_tag_dict[oshi_info.Oshi.id] %} {{ tag.tag_name }}
+      {% endfor %}
+    </footer>
+  </div>
 </div>
-{% endfor %}
+{% endfor %} 
 {% endblock %}

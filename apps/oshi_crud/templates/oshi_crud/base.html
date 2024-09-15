@@ -14,6 +14,36 @@
             <a href="{{ url_for('oshi_crud.index') }}" class="navbar-brand">
                 推し図鑑
             </a>
+            <!-- 画像検索フォームを追加する -->
+            {% if url_for(request.endpoint) == url_for('oshi_crud.index') or
+            url_for(request.endpoint) == url_for('oshi_crud.search') %}
+            <div class="btn-group">
+                <form
+                    method="GET"
+                    action="{{ url_for('oshi_crud.search') }}"
+                    name="detectSearchForm"
+                >
+                {% if request.args.get("search") %}
+                    <input
+                        type="search"
+                        id="detect-search1"
+                        class="form-control col-md-12 detect-search"
+                        placeholder="検索"
+                        name="search"
+                        value="{{ request.args.get('search') }}"
+                    >
+                {% else %}
+                    <input
+                    type="search"
+                    id="detect-search2"
+                    class="form-control col-md-12 detect-search"
+                    placeholder="検索"
+                    name="search"
+                    >
+                {% endif %}
+                </form>
+            </div>
+            {% endif %}
             <ul class="navbar-nav">
                 {% if current_user.is_authenticated %}
                 <li class="nav-item">
