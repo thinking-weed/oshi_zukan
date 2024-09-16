@@ -21,7 +21,6 @@ from flask import (
 )
 from flask_login import current_user,login_required
 from apps.app import db
-from apps.config import DevelopmentConfig
 from apps.oshi_crud.models import Oshi, OshiImageTag
 from apps.user_crud.models import User
 from apps.oshi_crud.forms import OshiForm,DetectorForm
@@ -229,3 +228,10 @@ def detect(oshi_image_id):
         return redirect(url_for("oshi_crud.index"))
     
     return redirect(url_for("oshi_crud.index"))
+
+#-----------------------------物体検索エンドポイント-------------------------------------
+
+@oshi_crud.route("/images/search", methods=["GET"])
+@login_required
+def search():
+    pass #一旦エラーを防ぐためにパスをする
