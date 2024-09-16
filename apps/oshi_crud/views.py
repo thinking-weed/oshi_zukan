@@ -21,6 +21,7 @@ from flask import (
 )
 from flask_login import current_user,login_required
 from apps.app import db
+from apps.config import DevelopmentConfig
 from apps.oshi_crud.models import Oshi, OshiImageTag
 from apps.user_crud.models import User
 from apps.oshi_crud.forms import OshiForm,DetectorForm
@@ -108,7 +109,8 @@ def index():
     oshi_informations = (
         db.session.query(User, Oshi)
         .join(Oshi)
-        .filter(User.id == Oshi.user_id)#.order_by(desc("id"))#逆順に並べ替える
+        .filter(User.id == Oshi.user_id)
+        .order_by(desc("id"))#逆順に並べ替える
         .all()
     )
 
