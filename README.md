@@ -30,6 +30,8 @@ pip install -r requirements.txt
 ```.env
 FLASK_APP=apps.app:create_app
 FLASK_ENV=development
+SECRET_KEY=
+WTF_CSRF_SECRET_KEY=
 ```
 
 正しいか分からないですが、よくこれを利用してます
