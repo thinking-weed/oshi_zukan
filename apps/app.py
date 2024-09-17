@@ -79,7 +79,7 @@ def create_app():
 
     from apps.oshi_crud import views
 
-    app.register_blueprint(views.oshi_crud)
+    app.register_blueprint(views.oshi_crud, url_prefix="/oshi_crud")
 
     return app
 

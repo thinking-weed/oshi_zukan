@@ -9,10 +9,23 @@
 {% endif %} {% endwith %}
 
 <!-- 画像アップロード画面へのリンクを追加する -->
+<div class="d-flex justify-content-between">
 <div class="col-md-10 text-right dt-image-register-btn">
   <a href="{{ url_for('oshi_crud.create') }}" class="btn btn-primary">
     新しい推しを登録
   </a>
+</div>
+{% if url_for(request.endpoint) == url_for('oshi_crud.index') or url_for(request.endpoint) == url_for('oshi_crud.search') %}
+<div class="btn-group">
+  <form action="{{ url_for('oshi_crud.search') }}" method="GET" name="DetectSearchForm">
+    {% if request.args.get("search") %}
+      <input type="search" id="dt-search1" class="form-control col-md-12 detect-search" placeholder="検索" name="search" value="{{ request.args.get('search') }}">
+    {% else %}
+      <input type="search" id="dt-search2" class="form-control col-md-12 detect-search" placeholder="検索" name="search" >
+    {% endif %}
+  </form>
+</div>
+{% endif %}
 </div>
 <!-- 画像一覧を表示 -->
 {% for oshi_info in oshi_informations %}

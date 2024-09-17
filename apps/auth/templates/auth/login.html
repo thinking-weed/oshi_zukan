@@ -1,10 +1,10 @@
-{% extends "oshi_crud/base.html" %}
+{% extends "auth/auth_base.html" %}
 {% block title %}ログイン{% endblock %}
 {% block content %}
 <div class="mx-auto dt-auth-main">
     <div class="card dt-auth-login">
         <header>ログイン</header>
-            <section>
+            <section class="container">
                 <form action="{{ url_for('auth.login') }}" method="post" >
                     {% for message in get_flashed_messages() %}
                     <span class="dt-auth-flash error_message">{{ message }}</span>

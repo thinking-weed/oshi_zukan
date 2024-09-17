@@ -40,7 +40,8 @@ from apps.oshi_crud.detect_functions import (
 oshi_crud = Blueprint(
     "oshi_crud",
     __name__,
-    template_folder="templates"
+    template_folder="templates",
+    static_folder="static"
 )
 
 #----------------------------------------------------------------------------------------------

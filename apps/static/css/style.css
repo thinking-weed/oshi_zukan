@@ -116,3 +116,14 @@ td {
   border: 1px solid #c0c0c0;
   text-align: center;
 }
+
+
+.btn-group form{
+  margin: auto;
+  text-align: center;
+}
+
+.btn-group form input{
+  background-color: white;
+  color: black;
+}
