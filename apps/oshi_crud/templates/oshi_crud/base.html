@@ -1,59 +1,67 @@
 <!DOCTYPE html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>推し図鑑</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>推し図鑑（推し一覧画面へ）</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/bootstrap.min.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+  </head>
+  <body>
     <!-- ナビゲーションバー -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-        <div class="container">
-            <a href="{{ url_for('oshi_crud.index') }}" class="navbar-brand">
-                推し図鑑
+      <div class="container">
+        <a href="{{ url_for('oshi_crud.index') }}" class="navbar-brand">
+          推し図鑑（推し一覧画面へ）
+        </a>
+        <ul class="navbar-nav">
+          {% if current_user.is_authenticated %}
+          <li class="nav-item">
+            <span class="nav-link">{{ current_user.username }}</span>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('start.menu') }}" class="nav-link">
+              メニュー
             </a>
-            <ul class="navbar-nav">
-                {% if current_user.is_authenticated %}
-                <li class="nav-item">
-                    <span class="nav-link">{{ current_user.username }}</span>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('start.menu') }}" class="nav-link">
-                        メニュー
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('auth.logout') }}" class="nav-link">
-                        ログアウト
-                    </a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <a href="{{ url_for('start.menu') }}" class="nav-link">
-                        メニュー
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('auth.signup') }}" class="nav-link">
-                        新規登録
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ url_for('auth.login') }}" class="nav-link">
-                        ログイン
-                    </a>
-                </li>
-                {% endif %}
-            </ul>
-        </div>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('auth.logout') }}" class="nav-link">
+              ログアウト
+            </a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a href="{{ url_for('start.menu') }}" class="nav-link">
+              メニュー
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('auth.signup') }}" class="nav-link">
+              新規登録
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{ url_for('auth.login') }}" class="nav-link">
+              ログイン
+            </a>
+          </li>
+          {% endif %}
+        </ul>
+      </div>
     </nav>
-    
+
     <!-- block contentをsection class="container"で囲む -->
-    <section class="container">
-        {% block content %}{% endblock %}
-    </section>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-</body>
+    <section class="container">{% block content %}{% endblock %}</section>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>

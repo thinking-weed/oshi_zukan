@@ -17,9 +17,7 @@
     <!-- ナビゲーションバー -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container">
-        <a href="" class="navbar-brand">
-          推し図鑑
-        </a>
+        <a href="" class="navbar-brand"> 推し図鑑（推し一覧画面へ） </a>
         <ul class="navbar-nav">
           {% if current_user.is_authenticated %}
           <li class="nav-item">
@@ -59,7 +57,9 @@
         <a href="{{ url_for('oshi_crud.index') }}">推し画像一覧</a>
       </p>
       <p>
-        <a href="{{ url_for('oshi_crud.comment_list') }}">推しへのコメント一覧</a>
+        <a href="{{ url_for('oshi_crud.comment_list') }}"
+          >推しへのコメント一覧</a
+        >
       </p>
       <p>
         <a href="{{ url_for('user_crud.users_index') }}">ユーザー一覧</a>

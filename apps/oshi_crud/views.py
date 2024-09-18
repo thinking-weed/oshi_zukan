@@ -6,7 +6,7 @@ import numpy as np
 # 動作しないケースがあるらしく、ここでは利用しない
 from pathlib import Path
 from PIL import Image
-from sqlalchemy import desc
+from sqlalchemy import desc,asc
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from flask import (
@@ -235,4 +235,61 @@ def detect(oshi_image_id):
 @oshi_crud.route("/images/search", methods=["GET"])
 @login_required
 def search():
-    pass #一旦エラーを防ぐためにパスをする
+    #検索元となる画像一覧を取得する
+    oshi_informations = db.session.query(User, Oshi).join(
+        Oshi, User.id == Oshi.user_id
+    ).order_by(desc("id"))#逆順に並べ替える
+
+    #GETパラメータから検索ワードを取得する
+    search_text = request.args.get("search")
+    oshi_image_tag_dict = {}
+    filtered_oshi_informations = []
+
+    #oshi_informationsをループして、oshi_informationsに紐づくタグ情報を検索する
+    for oshi_info in oshi_informations:
+        #検索ワードが空の場合はすべてのタグを取得する
+        if not search_text:
+            #タグ一覧を取得する
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .all()
+            )
+        else:
+            #検索ワードで絞り込んだタグを取得する（検索フォームに値を入力した場合）
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .filter(OshiImageTag.tag_name.like("%" + search_text + "%"))
+                .all()
+            )
+
+            #タグが見つからなかったら（まだ検知してタグを生成していなかったら）画像を返さない
+            if not oshi_image_tags:
+                continue
+
+            #タグがある（生成されている）場合はタグ情報を取得し直す
+            oshi_image_tags = (
+                OshiImageTag.query
+                .filter(OshiImageTag.oshi_image_id == oshi_info.Oshi.id)
+                .all()
+            )
+        
+        #oshi_image_id をキーとする辞書にタグ情報をセットする
+        oshi_image_tag_dict[oshi_info.Oshi.id] = oshi_image_tags
+
+        #絞り込み結果のoshi_info情報を配列セットする
+        filtered_oshi_informations.append(oshi_info)
+    
+    detector_form = DetectorForm()
+    oshi_form = OshiForm()
+
+    return render_template(
+        "oshi_crud/index.html",
+        # 検索で絞り込んだoshi_informations配列を渡す
+        oshi_informations = filtered_oshi_informations,
+        # 画像に紐付くタグ一覧の辞書を渡す
+        oshi_image_tag_dict = oshi_image_tag_dict,
+        detector_form = detector_form,
+        oshi_form=oshi_form
+    )
