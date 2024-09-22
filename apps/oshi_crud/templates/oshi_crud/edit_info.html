@@ -26,7 +26,7 @@
       
       <!-- 投稿日時を表示だけする（非編集） -->
       <p class="edit_area">
-        投稿日時: {{ oshi.posted_at }}
+        投稿日時: {% if oshi.posted_at %}{{ oshi.posted_at.strftime('%Y年%m月%d日 %H:%M') }}{% else %}未設定{% endif %}
       </p>
 
       <p class="edit_area">

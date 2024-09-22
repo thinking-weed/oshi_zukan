@@ -10,7 +10,7 @@ class Oshi(db.Model):
     #usersテーブルのidカラムを外部キーとして設定
     user_id = db.Column(db.String, db.ForeignKey("users.id"))
     oshi_name = db.Column(db.String)
-    posted_at = db.Column(db.String)
+    posted_at = db.Column(db.DateTime)
     comment = db.Column(db.String)
     image_path = db.Column(db.String,nullable=True)
     is_detected = db.Column(db.Boolean, default=False)

@@ -33,7 +33,7 @@
   <header class="d-flex justify-content-around">
     <div>
       <div class="oshi_name">Xアカウント名: {{ oshi_info.Oshi.oshi_name }}</div>
-      <div class="posted_at">ポスト投稿日時：{{ oshi_info.Oshi.posted_at }}</div>
+      <div class="posted_at">ポスト投稿日時：{% if oshi_info.Oshi.posted_at %}{{ oshi_info.Oshi.posted_at.strftime('%Y年%m月%d日 %H:%M') }}{% else %}未設定{% endif %}</div>
     </div>
     <div class="for_oshi_comment">
       <p>推しへのコメント</p>

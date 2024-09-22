@@ -56,7 +56,7 @@ def create():
         #formにポストの投稿日時を取得して表示形式を変換
         first_posted_at_data = request.form.get('real_posted_at')
         posted_at_data = datetime.strptime(first_posted_at_data, '%Y-%m-%dT%H:%M')
-        formatted_date = posted_at_data.strftime('%Y年%m月%d日 %H:%M')
+        # formatted_date = posted_at_data.strftime('%Y年%m月%d日 %H:%M')
 
         #アップロードされた画像ファイルを取得
         file = oshi_form.image.data
@@ -76,7 +76,7 @@ def create():
         oshi_info = Oshi(
             user_id = current_user.id,
             oshi_name=oshi_form.oshi_name.data,
-            posted_at=str(formatted_date),
+            posted_at=posted_at_data, #str(formatted_date),
             # .datetime.strftime('%m月%d日%H時%M分')
             comment=oshi_form.comment.data,
             image_path = image_uuid_file_name
@@ -293,3 +293,13 @@ def search():
         detector_form = detector_form,
         oshi_form=oshi_form
     )
+
+# 404エラーハンドリングデコレータ
+@oshi_crud.errorhandler(404)
+def page_not_found(e):
+    return render_template("oshi_crud/404.html"), 404
+
+# 500エラーハンドリングデコレータ
+@oshi_crud.errorhandler(500)
+def internal_server_error(e):
+    return render_template("oshi_crud/500.html"), 500

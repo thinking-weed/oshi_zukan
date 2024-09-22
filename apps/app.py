@@ -1,10 +1,11 @@
-from flask import Flask
+from flask import Flask,render_template
 from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 from flask_debugtoolbar import DebugToolbarExtension
 from flask_wtf.csrf import CSRFProtect
 from flask_login import LoginManager
 from datetime import datetime
+from apps.error_functions import page_not_found,internal_server_error
 import logging,pytz
 # import config なぜか、このコメントアウトを取り、
 # apps.config.Configをconfig.Configとするとエラーになる
@@ -52,6 +53,14 @@ def create_app():
 
     tokyo_tz = pytz.timezone('Asia/Tokyo')
     tokyo_time = datetime.now(tokyo_tz)
+
+    #カスタムエラー画面を登録する
+    # app.register_error_handler関数は、アプリに独自のエラーハンドラを追加する機能
+    # 第1引数にエラーコードまたはエラークラスを指定、第2引数に実行する関数を登録
+    #ルーター：クライアントからのリクエストを適切な処理に振り分ける
+    # ⇔ルーターが振り分けたリクエストを実際に処理する関数やメソッド
+    app.register_error_handler(404, page_not_found)
+    app.register_error_handler(500, internal_server_error)
 
 
 #---------------------------各Blueprintを以下に定義-----------------------------------
