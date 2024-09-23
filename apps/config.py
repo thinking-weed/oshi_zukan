@@ -137,4 +137,11 @@ class DevelopmentConfig:
         "toothbrush",
     ]
 
+class TestingConfig(DevelopmentConfig):
+    #テストで「アプリで利用する画像アップロードディレクトリ」を利用しないように、
+    #UPLOAD_FOLDERを追加
+    #画像アップロード先にtests/oshi_crud/imagesを指定する
+    UPLOAD_FOLDER = str(Path(basedir, "tests", "oshi_crud", "images"))
+
 Config = DevelopmentConfig
+TestingConfig = TestingConfig
