@@ -43,6 +43,34 @@ WTF_CSRF_SECRET_KEY=
 flask routes
 ```
 
+<h3>Pytorchにデフォルトで用意されている学習済みモデルmodel.ptファイルを取得</h3>
+ターミナルを開き
+
+```powershell
+～～\object_detection_app>python
+```
+でインタラクティブシェルを起動して以下のように入力してください
+
+```powershell
+～～\object_detection_app>python
+Python 3.9.6 (tags/v3.9.6:db3ff76, Jun 28 2021, 15:26:21) [MSC v.1929 64 bit (AMD64)] on win32　　　👈メッセージが出てきます
+Type "help", "copyright", "credits" or "license" for more information.　　　　　　　　　　　　　　　　　※最後exit()+Enterで終了
+>>>import torch
+>>>import torchvision
+>>>model = torchvision.models.detection.maskrcnn_resnet50_fpn(pretrained=True)
+>>>torch.save(model, "model.pt")
+```
+object_detection_app直下にmodel.ptというファイルが作成されたら、exit()+Enterでインタラクティブシェルを終了し、<br>
+model.ptを以下の場所に入れてください。
+
+```
+object_detection_app
+   |
+   |--apps
+        |
+      oshi_crudフォルダ  👈ココの直下に入れる
+```
+
 <h3>DBの作成</h3>
 
 ```
@@ -55,6 +83,7 @@ flask db upgrade
 ```
 flask db downgrade
 ```
+
 
 <h3>開発用サーバー起動</h3>
 
