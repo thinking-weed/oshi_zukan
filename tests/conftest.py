@@ -53,3 +53,5 @@ def fixture_app():
 def client(fixture_app):
     #Flaskのテスト用クライアントを返す
     return fixture_app.test_client()
+
+    

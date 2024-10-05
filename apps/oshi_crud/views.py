@@ -6,7 +6,7 @@ import numpy as np
 # 動作しないケースがあるらしく、ここでは利用しない
 from pathlib import Path
 from PIL import Image
-from sqlalchemy import desc,asc
+from sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from flask import (

@@ -5,7 +5,7 @@ from apps.user_crud.forms import UserForm
 from apps.oshi_crud.models import Oshi
 from apps.oshi_crud.forms import OshiForm
 
-#Blueprintでuser_crudアプリを生成する
+#Blueprintでstartアプリを生成する
 start = Blueprint(
     "start",
     __name__,
