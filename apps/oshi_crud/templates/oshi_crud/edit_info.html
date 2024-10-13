@@ -18,7 +18,7 @@
         {{ oshi_form.oshi_name(placeholder="推しの名前またはXアカウント名") }}
       </p>
       <p>
-        <a href="https://x.com/{{ for_search }}">推しがXをしていれば、そのアカウントを確認する</a>
+        <a href="https://x.com/{{ for_search }}" class="x_profile">推しがXをしていれば、そのアカウントを確認する</a>
       </p>
       {% for error in oshi_form.oshi_name.errors %}
       <span class="error_message">{{ error }}</span>

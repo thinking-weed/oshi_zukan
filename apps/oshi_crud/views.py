@@ -7,6 +7,7 @@ import numpy as np
 from pathlib import Path
 from PIL import Image
 from sqlalchemy import desc
+# from flask_sqlalchemy import desc
 from sqlalchemy.exc import SQLAlchemyError
 from datetime import datetime
 from flask import (
@@ -101,7 +102,7 @@ def image_file(filename):
 
 #----------------------------------------------------------------------------------------------
 
-# 画像一覧を表示するエンドポイント
+# 画像やコメント一覧を表示するエンドポイント
 @oshi_crud.route("/index")
 @login_required
 def index():
@@ -151,7 +152,7 @@ def comment_list():
 
 #----------------------------------------------------------------------------------------------
 
-#コメント編集をするためのエンドポイント（修正が必要）
+#コメント編集をするためのエンドポイント
 @oshi_crud.route("/edit_info/<oshi_id>", methods=["GET", "POST"])
 @login_required
 def edit_info(oshi_id):

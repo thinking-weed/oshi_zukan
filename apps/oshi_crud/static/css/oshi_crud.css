@@ -1,6 +1,9 @@
 body {
     background-color: #3699e8;
   }
+.x_profile{
+    color: red;
+}
 .table {
     /* 隣接するボーダーを重ねて1本にして表示する */
     border-collapse: collapse;
