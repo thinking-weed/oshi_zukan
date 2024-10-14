@@ -135,6 +135,7 @@ class DevelopmentConfig:
         "teddy bear",
         "hair drier",
         "toothbrush",
+        # "microphone"
     ]
 
 class TestingConfig(DevelopmentConfig):

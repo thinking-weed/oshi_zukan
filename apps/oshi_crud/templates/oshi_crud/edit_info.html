@@ -37,17 +37,20 @@
       <span class="error_message">{{ error }}</span>
       {% endfor %}
     </div>
+    <div>
+      <p class="edit_info_btn"><input type="submit" value="修正" /></p>
+      <p class="edit_info_btn">
+        <form action="{{ url_for('oshi_crud.delete', oshi_id=oshi.id) }}" method="POST">
+            {{ oshi_form.hidden_tag() }}
+            <input type="submit" value="削除" />
+        </form>
+      </p>
+    </div>
     <img
       src="{{ url_for('oshi_crud.image_file', filename=oshi.image_path) }}"
       style="margin-left: 5rem; height: 50%"
       alt="アップロード画像"
     />
   </div>
-  <p><input type="submit" value="修正" /></p>
-</form>
-
-<form action="{{ url_for('oshi_crud.delete', oshi_id=oshi.id) }}" method="POST">
-  {{ oshi_form.hidden_tag() }}
-  <input type="submit" value="削除" />
 </form>
 {% endblock %}

@@ -25,3 +25,6 @@ p{
 .edit_area input{
     width: 50%;
 }
+.edit_info_btn{
+    display: inline;
+}
