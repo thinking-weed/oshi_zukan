@@ -93,4 +93,5 @@ flask run --debug
 
 <h2>もしよければ参考に</h2>
 
+拙筆：チーム開発備忘録①　小規模チーム開発で面倒だったGithub周りの下準備
 https://qiita.com/thinking-weed/items/702bc7353edb644e567d
