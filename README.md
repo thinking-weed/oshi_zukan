@@ -90,4 +90,7 @@ flask db downgrade
 ```
 flask run --debug
 ```
-# object_detection_app
+
+<h2>もしよければ参考に</h2>
+
+https://qiita.com/thinking-weed/items/702bc7353edb644e567d
