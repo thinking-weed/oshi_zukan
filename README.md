@@ -9,7 +9,7 @@ git clone後以下のコマンドで動くはず・・・（Pythonのversionは3
 ```
 PowerShell Set-ExecutionPolicy RemoteSigned CurrentUser  #実行ポリシーを変更
 py -m venv venv  #venvフォルダの作成（※プロジェクト直下にできます）
-venv\Scripts\Activate.ps1   #最後はps「イチ」
+.\venv\Scripts\Activate.ps1   #最後はps「イチ」
 ```
 
 <h3>最新のpipを入れる</h3>
