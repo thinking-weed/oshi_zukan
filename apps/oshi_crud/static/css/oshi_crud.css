@@ -1,6 +1,10 @@
 body {
     background-color: #3699e8;
   }
+section{
+    margin: 1rem;
+}
+
 .x_profile{
     color: red;
 }
@@ -27,4 +31,14 @@ p{
 }
 .edit_info_btn{
     display: inline;
+}
+.for_oshi_comment p{
+    width: 100%;
+}
+
+.account-name-input{
+    width: 50%;
+}
+#oshi_name{
+    width: 40%;
 }
