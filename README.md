@@ -9,7 +9,7 @@ git clone後以下のコマンドで動くはず・・・（Pythonのversionは3
 ```
 PowerShell Set-ExecutionPolicy RemoteSigned CurrentUser  #実行ポリシーを変更
 py -m venv venv  #venvフォルダの作成（※プロジェクト直下にできます）
-venv\Scripts\Activate.ps1   #最後はps「イチ」
+.\venv\Scripts\Activate.ps1   #最後はps「イチ」
 ```
 
 <h3>最新のpipを入れる</h3>
@@ -90,4 +90,9 @@ flask db downgrade
 ```
 flask run --debug
 ```
-# object_detection_app
+
+<h2>もしよければ参考に</h2>
+
+拙筆：チーム開発備忘録①　小規模チーム開発で面倒だったGithub周りの下準備
+
+https://qiita.com/thinking-weed/items/702bc7353edb644e567d
