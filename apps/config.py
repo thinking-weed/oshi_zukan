@@ -1,7 +1,7 @@
 """FlaskのConfigを提供する"""
 from pathlib import Path
 from dotenv import load_dotenv
-load_dotenv()
+
 
 import random, string, os
 
